@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: #0D1117; color: #E6EDF3; font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0D1117; }
+  ::-webkit-scrollbar-thumb { background: #30363D; border-radius: 3px; }
+}
+
+@layer components {
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply bg-gradient-to-br from-primary to-primaryDark text-white border-none rounded-lg cursor-pointer
+           font-body font-semibold tracking-wide transition-all duration-200
+           hover:-translate-y-0.5 hover:shadow-[0_6px_24px_#1A73E880];
+  }
+  .btn-outline {
+    @apply bg-transparent text-textPrim border border-border rounded-lg cursor-pointer
+           font-body font-medium tracking-wide transition-all duration-200
+           hover:border-primary/50 hover:bg-primary/5 hover:text-white;
+  }
+
+  /* Nav link */
+  .nav-link {
+    @apply text-textSec no-underline text-sm font-medium transition-colors duration-200 cursor-pointer hover:text-white;
+  }
+
+  /* Cards */
+  .feature-card {
+    @apply bg-darkCard border border-border rounded-2xl p-8 transition-all duration-200 cursor-default
+           hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)];
+  }
+  .stat-card {
+    @apply bg-cardInner border border-border rounded-xl p-7 text-center transition-all duration-200
+           hover:border-accent/30;
+  }
+  .step-card {
+    @apply bg-darkCard border border-border rounded-2xl p-7 relative transition-all duration-200
+           hover:border-primary/30 hover:-translate-y-1;
+  }
+  .testimonial-card {
+    @apply bg-darkCard border border-border rounded-2xl p-7 transition-all duration-200
+           hover:border-primary/30;
+  }
+  .pricing-card {
+    @apply bg-darkCard border border-border rounded-[20px] p-9 transition-all duration-200
+           hover:-translate-y-1;
+  }
+  .pricing-card.featured {
+    @apply border-primary shadow-[0_0_40px_#1A73E820] relative;
+  }
+
+  /* Ticker */
+  .ticker-track {
+    @apply flex w-max animate-ticker;
+  }
+  .ticker-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Scroll animations */
+  .fade-up   { opacity: 0; }
+  .fade-left { opacity: 0; }
+  .fade-right{ opacity: 0; }
+  .visible.fade-up    { animation: fadeUp   0.7s ease both; }
+  .visible.fade-left  { animation: fadeLeft  0.7s ease both; }
+  .visible.fade-right { animation: fadeRight 0.7s ease both; }
+}
