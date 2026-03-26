@@ -1,6 +1,6 @@
 /**
  * MeetingControls.jsx
- * Bottom control bar for the meeting room.
+ * Bottom control bar — now includes screen share toggle.
  */
 
 function ControlBtn({ icon, label, active = true, danger = false, onClick, badge }) {
@@ -11,7 +11,7 @@ function ControlBtn({ icon, label, active = true, danger = false, onClick, badge
       title={label}
     >
       <div
-        className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-lg transition-all"
+        className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-lg transition-all hover:scale-105"
         style={{
           background: danger
             ? "rgba(229,57,53,0.18)"
@@ -19,15 +19,21 @@ function ControlBtn({ icon, label, active = true, danger = false, onClick, badge
               ? "rgba(26,115,232,0.18)"
               : "rgba(255,255,255,0.08)",
           border: `1px solid ${
-            danger ? "rgba(229,57,53,0.4)" : active ? "rgba(26,115,232,0.35)" : "#30363D"
+            danger
+              ? "rgba(229,57,53,0.4)"
+              : active
+                ? "rgba(26,115,232,0.35)"
+                : "#30363D"
           }`,
           position: "relative",
         }}
       >
         {icon}
         {badge && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-bold"
-            style={{ background: "#E53935", color: "#fff" }}>
+          <span
+            className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-bold"
+            style={{ background: "#E53935", color: "#fff" }}
+          >
             {badge}
           </span>
         )}
@@ -40,31 +46,38 @@ function ControlBtn({ icon, label, active = true, danger = false, onClick, badge
 }
 
 export default function MeetingControls({
-  micOn, camOn, chatOpen, duration,
+  micOn, camOn, chatOpen, screenSharing,
+  duration, langDirection,
   onToggleMic, onToggleCam, onToggleChat,
   onShareLink, onEndCall,
-  langDirection, onToggleLang,
+  onToggleLang, onToggleScreen,
 }) {
   return (
     <div
       className="flex items-center justify-between gap-2 sm:gap-4 px-4 sm:px-8 py-3 border-t"
       style={{ background: "#161B22", borderColor: "#30363D" }}
     >
-      {/* Left — call timer + lang */}
+      {/* Left — timer + language */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#43A047" }} />
-          <span className="text-[12px] font-semibold tabular-nums" style={{ color: "#E6EDF3", fontFamily: "'DM Sans', sans-serif" }}>
+          <span
+            className="text-[12px] font-semibold tabular-nums"
+            style={{ color: "#E6EDF3", fontFamily: "'DM Sans', sans-serif" }}
+          >
             {duration}
           </span>
         </div>
-        {/* Language toggle pill */}
         <button
           onClick={onToggleLang}
           className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border cursor-pointer transition-all hover:opacity-80"
           style={{
-            background: "rgba(0,191,165,0.12)", borderColor: "rgba(0,191,165,0.35)",
-            color: "#00BFA5", fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600,
+            background:  "rgba(0,191,165,0.12)",
+            borderColor: "rgba(0,191,165,0.35)",
+            color:       "#00BFA5",
+            fontFamily:  "'DM Sans', sans-serif",
+            fontSize:    11,
+            fontWeight:  600,
           }}
         >
           🌐 {langDirection}
@@ -73,11 +86,49 @@ export default function MeetingControls({
 
       {/* Centre — core controls */}
       <div className="flex items-center gap-2 sm:gap-4">
-        <ControlBtn icon={micOn ? "🎙️" : "🔇"} label={micOn ? "Mute"  : "Unmute"} active={micOn}  onClick={onToggleMic} />
-        <ControlBtn icon={camOn ? "📷" : "🚫"} label={camOn ? "Cam Off" : "Cam On"} active={camOn}  onClick={onToggleCam} />
-        <ControlBtn icon="🔗"  label="Share"   active={false} onClick={onShareLink} />
-        <ControlBtn icon="💬"  label="Chat"    active={chatOpen} onClick={onToggleChat} />
-        {/* End call — red */}
+        <ControlBtn
+          icon={micOn  ? "🎙️" : "🔇"}
+          label={micOn ? "Mute"   : "Unmute"}
+          active={micOn}
+          onClick={onToggleMic}
+        />
+        <ControlBtn
+          icon={camOn  ? "📷" : "🚫"}
+          label={camOn ? "Cam Off" : "Cam On"}
+          active={camOn}
+          onClick={onToggleCam}
+        />
+
+        {/* Screen share — teal when active */}
+        <button
+          onClick={onToggleScreen}
+          className="flex flex-col items-center gap-1 cursor-pointer border-none bg-transparent"
+          title={screenSharing ? "Stop Sharing" : "Share Screen"}
+        >
+          <div
+            className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl text-lg transition-all hover:scale-105"
+            style={{
+              background:  screenSharing ? "rgba(0,191,165,0.22)"  : "rgba(255,255,255,0.08)",
+              border:      `1px solid ${screenSharing ? "rgba(0,191,165,0.5)" : "#30363D"}`,
+            }}
+          >
+            🖥
+          </div>
+          <span
+            className="text-[9px] sm:text-[10px]"
+            style={{
+              color:      screenSharing ? "#00BFA5" : "#8B949E",
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {screenSharing ? "Stop" : "Screen"}
+          </span>
+        </button>
+
+        <ControlBtn icon="🔗"  label="Share"  active={false} onClick={onShareLink} />
+        <ControlBtn icon="💬"  label="Chat"   active={chatOpen} onClick={onToggleChat} />
+
+        {/* End call */}
         <button
           onClick={onEndCall}
           className="flex flex-col items-center gap-1 cursor-pointer border-none bg-transparent"
@@ -94,10 +145,12 @@ export default function MeetingControls({
         </button>
       </div>
 
-      {/* Right — participants */}
+      {/* Right — participants count */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border"
-          style={{ background: "rgba(255,255,255,0.04)", borderColor: "#30363D" }}>
+        <div
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border"
+          style={{ background: "rgba(255,255,255,0.04)", borderColor: "#30363D" }}
+        >
           <span className="text-[11px]" style={{ color: "#8B949E", fontFamily: "'DM Sans', sans-serif" }}>👥</span>
           <span className="text-[11px]" style={{ color: "#8B949E", fontFamily: "'DM Sans', sans-serif" }}>2 / 2</span>
         </div>
